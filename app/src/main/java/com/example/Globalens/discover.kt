@@ -64,7 +64,6 @@ fun Discover(viewModel: NewsViewModel, navController: NavController) {
         scope.launch {
             navController.navigate("Home") {
                 launchSingleTop = true
-
             }
         }
     }
