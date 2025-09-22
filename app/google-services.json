@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "70967568561",
+    "project_id": "globalens-37401",
+    "storage_bucket": "globalens-37401.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:70967568561:android:05f22c174bdb40d3341a90",
+        "android_client_info": {
+          "package_name": "com.example.Globalens"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgo8ZlTW9B45aZjGINCSmkdFuxf7NG7yI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
