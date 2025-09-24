@@ -2,7 +2,6 @@ package com.example.Globalens
 
 import android.content.Intent
 import android.net.Uri
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -44,9 +43,9 @@ import com.example.Globalens.RoomDatabase.News_Article_Entity
 import com.example.Globalens.ViewModel.NewsViewModel
 
 @Composable
-fun SeeMore_Screen(article: List<News_Article_Entity>,viewModel: NewsViewModel) {
+fun SeeMore_Screen(article: List<News_Article_Entity>, viewModel: NewsViewModel) {
     val context = LocalContext.current
-    
+
     LazyColumn(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.background)
@@ -56,7 +55,7 @@ fun SeeMore_Screen(article: List<News_Article_Entity>,viewModel: NewsViewModel) 
             var data = article[it]
             var isFavorite by remember { mutableStateOf(false) }
             val publishTime = convertTimeZone(data.publishedAt.toString())
-            LaunchedEffect(Unit) {isFavorite = viewModel.isFavorite(data.url) }
+            LaunchedEffect(Unit) { isFavorite = viewModel.isFavorite(data.url) }
             Column(
                 modifier = Modifier
                     .padding(top = 15.dp)
@@ -116,7 +115,7 @@ fun SeeMore_Screen(article: List<News_Article_Entity>,viewModel: NewsViewModel) 
                     maxLines = 4,
                     fontWeight = FontWeight.W400,
                     color = MaterialTheme.colorScheme.onSurface,
-                            lineHeight = 28.sp,
+                    lineHeight = 28.sp,
                     modifier = Modifier.clickable {
                         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(data.url))
                         context.startActivity(intent)
@@ -127,12 +126,18 @@ fun SeeMore_Screen(article: List<News_Article_Entity>,viewModel: NewsViewModel) 
                         .fillMaxWidth()
                         .height(6.dp)
                 )
-                Row(modifier = Modifier.fillMaxWidth().padding(end = 5.dp), horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(end = 5.dp),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Text(
                         "${publishTime}",
                         fontSize = 18.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                fontWeight = FontWeight.W400,
+                        fontWeight = FontWeight.W400,
                         modifier = Modifier
                             .padding(end = 10.dp, bottom = 1.dp)
 
@@ -143,7 +148,7 @@ fun SeeMore_Screen(article: List<News_Article_Entity>,viewModel: NewsViewModel) 
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier
                             .size(28.dp)
-                            .clickable{
+                            .clickable {
                                 val article = News_Article_Entity(
                                     url = data.url,
                                     title = data.title,
@@ -153,7 +158,7 @@ fun SeeMore_Screen(article: List<News_Article_Entity>,viewModel: NewsViewModel) 
                                     source_Icon_Url = data.source_Icon_Url,
                                     content = data.content
                                 )
-                                viewModel.toggelFavorite(article,isFavorite)
+                                viewModel.toggelFavorite(article, isFavorite)
                                 isFavorite = !isFavorite
                             }
                     )
@@ -187,33 +192,37 @@ fun Disposable(viewModel: NewsViewModel) {
 
     if (isloading) {
         Column(
-            modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CircularProgressIndicator()
-            Log.d("Screen", "${isloading.toString()}  ${result.toString()}")
-
         }
     } else if (!isloading && result.isNullOrEmpty()) {
         loader()
     } else {
-        SeeMore_Screen(result,viewModel)
+        SeeMore_Screen(result, viewModel)
     }
 }
 
 @Composable
 fun loader() {
     Column(
-        modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
             painter = painterResource(id = R.drawable.not_foundd),
             contentDescription = "",
-            tint =MaterialTheme.colorScheme.onSurfaceVariant ,
-            modifier = Modifier.padding(vertical = 12.dp).size(140.dp)
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier
+                .padding(vertical = 12.dp)
+                .size(140.dp)
         )
         Text(
             "No Result Found",

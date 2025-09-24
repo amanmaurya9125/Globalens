@@ -1,7 +1,6 @@
 package com.example.Globalens
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -17,15 +16,16 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
 
-            val themeFlow = Theme_Preferences.getTheme(this).collectAsState(initial = ThemeMode.Default)
-            val darkTheme = when(themeFlow.value){
+            val themeFlow =
+                Theme_Preferences.getTheme(this).collectAsState(initial = ThemeMode.Default)
+            val darkTheme = when (themeFlow.value) {
                 ThemeMode.Dark -> true
                 ThemeMode.Light -> false
                 ThemeMode.Default -> isSystemInDarkTheme()
-        }
+            }
 
             TazaKhabarTheme(darkTheme = darkTheme) {
-               NavigationGraph()
+                NavigationGraph()
             }
         }
     }

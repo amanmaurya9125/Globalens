@@ -52,7 +52,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun ProfileScreen(navController: NavController, viewModel: NewsViewModel,themeFlow: ThemeMode) {
+fun ProfileScreen(navController: NavController, viewModel: NewsViewModel, themeFlow: ThemeMode) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val sharePref = SharedPreferences()
@@ -68,9 +68,9 @@ fun ProfileScreen(navController: NavController, viewModel: NewsViewModel,themeFl
         R.drawable.summer to ThemeMode.Light,
         R.drawable.night_mode to ThemeMode.Dark
     )
-    BackHandler{
+    BackHandler {
         scope.launch {
-            navController.navigate("Home"){
+            navController.navigate("Home") {
                 launchSingleTop = true
             }
         }
@@ -98,8 +98,10 @@ fun ProfileScreen(navController: NavController, viewModel: NewsViewModel,themeFl
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxWidth().height(80.dp)
-                .padding(top = 5.dp, end = 5.dp, start = 5.dp, bottom = 5.dp)                .clickable {
+                .fillMaxWidth()
+                .height(80.dp)
+                .padding(top = 5.dp, end = 5.dp, start = 5.dp, bottom = 5.dp)
+                .clickable {
                     navController.navigate("savedArticle")
                 },
             verticalAlignment = Alignment.CenterVertically
@@ -139,11 +141,14 @@ fun ProfileScreen(navController: NavController, viewModel: NewsViewModel,themeFl
             ) {
                 items(themeList) { (image, mode) ->
                     Column(
-                        modifier = Modifier.fillParentMaxWidth(1f / themeList.size).clickable {
-                            scope.launch{
-                                Theme_Preferences.saveTheme(context,mode)
+                        modifier = Modifier
+                            .fillParentMaxWidth(1f / themeList.size)
+                            .clickable {
+                                scope.launch {
+                                    Theme_Preferences.saveTheme(context, mode)
+                                }
                             }
-                        }.padding(top = 12.dp, bottom = 7.dp),
+                            .padding(top = 12.dp, bottom = 7.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         val isSelected = mode == themeFlow
@@ -177,10 +182,11 @@ fun ProfileScreen(navController: NavController, viewModel: NewsViewModel,themeFl
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
-                .fillMaxWidth().height(80.dp)
+                .fillMaxWidth()
+                .height(80.dp)
                 .padding(top = 5.dp, end = 5.dp, start = 5.dp, bottom = 5.dp)
                 .clickable {
-                   sendFeedBack(context)
+                    sendFeedBack(context)
                 }
         ) {
             Row(
@@ -208,8 +214,10 @@ fun ProfileScreen(navController: NavController, viewModel: NewsViewModel,themeFl
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxWidth().height(80.dp)
-                .padding(top = 5.dp, end = 5.dp, start = 5.dp, bottom = 5.dp)                .clickable {
+                .fillMaxWidth()
+                .height(80.dp)
+                .padding(top = 5.dp, end = 5.dp, start = 5.dp, bottom = 5.dp)
+                .clickable {
                     if (userauth.value) {
                         navController.navigate("Home")
                         scope.launch {
@@ -295,15 +303,15 @@ fun ProfileTop_After(name: String, image: String) {
     )
 }
 
-fun sendFeedBack(context: Context){
+fun sendFeedBack(context: Context) {
     val intent = Intent(Intent.ACTION_SENDTO).apply {
         data = Uri.parse("mailto:")
-        putExtra(Intent.EXTRA_EMAIL,arrayOf("aman91252188@gmail.com"))
-        putExtra(Intent.EXTRA_SUBJECT,"Feedback for Globalens")
+        putExtra(Intent.EXTRA_EMAIL, arrayOf("aman91252188@gmail.com"))
+        putExtra(Intent.EXTRA_SUBJECT, "Feedback for Globalens")
     }
     try {
         context.startActivity(intent)
-    }catch (e : Exception){
+    } catch (e: Exception) {
         Toast.makeText(context, "No email app found", Toast.LENGTH_SHORT).show()
 
     }

@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun SignUpScreen(navController: NavController,viewModel: NewsViewModel) {
+fun SignUpScreen(navController: NavController, viewModel: NewsViewModel) {
     val context = LocalContext.current
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -47,13 +47,13 @@ fun SignUpScreen(navController: NavController,viewModel: NewsViewModel) {
             verticalArrangement = Arrangement.Center
         ) {
 
-                Image(
-                    painter = painterResource(id = R.drawable.logo3),
-                    contentDescription = "App Logo",
-                    modifier = Modifier
-                        .size(180.dp)
-                        .padding(bottom = 30.dp)
-                )
+            Image(
+                painter = painterResource(id = R.drawable.logo3),
+                contentDescription = "App Logo",
+                modifier = Modifier
+                    .size(180.dp)
+                    .padding(bottom = 30.dp)
+            )
 
             // Name input field
             OutlinedTextField(
@@ -91,37 +91,36 @@ fun SignUpScreen(navController: NavController,viewModel: NewsViewModel) {
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(22.dp))
-LaunchedEffect(key1 =  signUp_State) {
-    signUp_State?.let {
-        if(it.isSuccess){
-            name = ""
-            email =""
-            password = ""
-            Toast.makeText(context, "✅ Sign Up Successful!", Toast.LENGTH_SHORT).show()
-            viewModel.clearState()
-            navController.navigate("Home"){
-                popUpTo("login"){
-                    inclusive = true
+            LaunchedEffect(key1 = signUp_State) {
+                signUp_State?.let {
+                    if (it.isSuccess) {
+                        name = ""
+                        email = ""
+                        password = ""
+                        Toast.makeText(context, "✅ Sign Up Successful!", Toast.LENGTH_SHORT).show()
+                        viewModel.clearState()
+                        navController.navigate("Home") {
+                            popUpTo("login") {
+                                inclusive = true
+                            }
+                            launchSingleTop = true
+                        }
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "❌ Error: ${it.exceptionOrNull()?.message}",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        viewModel.clearState()
+                    }
                 }
-                launchSingleTop = true
             }
-        }
-        else {
-            Toast.makeText(
-                context,
-                "❌ Error: ${it.exceptionOrNull()?.message}",
-                Toast.LENGTH_LONG
-            ).show()
-            viewModel.clearState()
-        }
-    }
-}
             // Sign Up button
             Button(
                 onClick = {
-                    if ( name.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty()) {
+                    if (name.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty()) {
                         viewModel.signUp(email, password)
-                    }else{
+                    } else {
                         Toast.makeText(context, "👆 Fill All Credentials", Toast.LENGTH_SHORT).show()
                     }
                 },
@@ -160,20 +159,23 @@ LaunchedEffect(key1 =  signUp_State) {
 
             // Social Sign-in Buttons
             Button(
-                onClick = { scope.launch {
-                   val result = viewModel.sign_With_Google(context)
-                    result.onSuccess {
-                        Toast.makeText(context, "${it}", Toast.LENGTH_SHORT).show()
-                       navController.navigate("Home"){
-                           popUpTo("login"){
-                               inclusive = true
-                           }
-                           launchSingleTop = true
-                       }
-                   }.onFailure {
-                       Toast.makeText(context, "Error: ${it.message}", Toast.LENGTH_SHORT).show()
-                   }
-                }},
+                onClick = {
+                    scope.launch {
+                        val result = viewModel.sign_With_Google(context)
+                        result.onSuccess {
+                            Toast.makeText(context, "${it}", Toast.LENGTH_SHORT).show()
+                            navController.navigate("Home") {
+                                popUpTo("login") {
+                                    inclusive = true
+                                }
+                                launchSingleTop = true
+                            }
+                        }.onFailure {
+                            Toast.makeText(context, "Error: ${it.message}", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
@@ -190,13 +192,14 @@ LaunchedEffect(key1 =  signUp_State) {
             Spacer(modifier = Modifier.height(18.dp))
 
             // Login Link
-            TextButton(onClick = { navController.navigate("login")
-            {
-                popUpTo("login"){
-                    inclusive = true
+            TextButton(onClick = {
+                navController.navigate("login")
+                {
+                    popUpTo("login") {
+                        inclusive = true
+                    }
+                    launchSingleTop = true
                 }
-                launchSingleTop = true
-            }
             }) {
                 Text(
                     text = "Already have an account? Log In",
@@ -209,7 +212,7 @@ LaunchedEffect(key1 =  signUp_State) {
 }
 
 @Composable
-fun LoginScreen(navController: NavController,viewModel: NewsViewModel) {
+fun LoginScreen(navController: NavController, viewModel: NewsViewModel) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val context = LocalContext.current
@@ -229,13 +232,13 @@ fun LoginScreen(navController: NavController,viewModel: NewsViewModel) {
             verticalArrangement = Arrangement.Center
         ) {
 
-                Image(
-                    painter = painterResource(id = R.drawable.logo3),
-                    contentDescription = "App Logo",
-                    modifier = Modifier
-                        .size(180.dp)
-                        .padding(bottom = 28.dp)
-                )
+            Image(
+                painter = painterResource(id = R.drawable.logo3),
+                contentDescription = "App Logo",
+                modifier = Modifier
+                    .size(180.dp)
+                    .padding(bottom = 28.dp)
+            )
 
             OutlinedTextField(
                 value = email,
@@ -260,21 +263,20 @@ fun LoginScreen(navController: NavController,viewModel: NewsViewModel) {
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(22.dp))
-            LaunchedEffect(key1 =  signUp_State) {
+            LaunchedEffect(key1 = signUp_State) {
                 signUp_State?.let {
-                    if(it.isSuccess){
-                        email =""
+                    if (it.isSuccess) {
+                        email = ""
                         password = ""
                         Toast.makeText(context, "✅Login Successful!", Toast.LENGTH_SHORT).show()
                         viewModel.clearState()
-                        navController.navigate("Home"){
-                            popUpTo("login"){
+                        navController.navigate("Home") {
+                            popUpTo("login") {
                                 inclusive = true
                             }
                             launchSingleTop = true
                         }
-                    }
-                    else {
+                    } else {
                         Toast.makeText(
                             context,
                             "❌ Input Correct Eamil and Password",
@@ -290,7 +292,7 @@ fun LoginScreen(navController: NavController,viewModel: NewsViewModel) {
                 onClick = {
                     if (email.isNotEmpty() && password.isNotEmpty()) {
                         viewModel.login(email, password)
-                    }else{
+                    } else {
                         Toast.makeText(context, "👆 Fill All Credentials", Toast.LENGTH_SHORT).show()
                     }
                 },
@@ -329,19 +331,21 @@ fun LoginScreen(navController: NavController,viewModel: NewsViewModel) {
             Button(
                 onClick = {
                     scope.launch {
-                    val result = viewModel.sign_With_Google(context)
-                    result.onSuccess {
-                        Toast.makeText(context, "${it}", Toast.LENGTH_SHORT).show()
-                        navController.navigate("Home"){
-                            popUpTo("login"){
-                                inclusive = true
+                        val result = viewModel.sign_With_Google(context)
+                        result.onSuccess {
+                            Toast.makeText(context, "${it}", Toast.LENGTH_SHORT).show()
+                            navController.navigate("Home") {
+                                popUpTo("login") {
+                                    inclusive = true
+                                }
+                                launchSingleTop = true
                             }
-                            launchSingleTop = true
+                        }.onFailure {
+                            Toast.makeText(context, "Error: ${it.message}", Toast.LENGTH_SHORT)
+                                .show()
                         }
-                    }.onFailure {
-                        Toast.makeText(context, "Error: ${it.message}", Toast.LENGTH_SHORT).show()
                     }
-                } },
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
@@ -358,12 +362,14 @@ fun LoginScreen(navController: NavController,viewModel: NewsViewModel) {
             Spacer(modifier = Modifier.height(18.dp))
 
             // Login Link
-            TextButton(onClick = {navController.navigate("signup"){
-                popUpTo("signup"){
-                    inclusive = true
+            TextButton(onClick = {
+                navController.navigate("signup") {
+                    popUpTo("signup") {
+                        inclusive = true
+                    }
+                    launchSingleTop = true
                 }
-                launchSingleTop = true
-            } }) {
+            }) {
                 Text(
                     text = "Not have an account? Sign Up",
                     fontWeight = FontWeight.Bold,

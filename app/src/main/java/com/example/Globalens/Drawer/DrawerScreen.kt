@@ -326,7 +326,7 @@ fun Drawer(navController: NavController, drawerState: DrawerState, viewModel: Ne
                     .padding(top = 5.dp, end = 5.dp, start = 5.dp, bottom = 5.dp)
                     .clickable {
                         sportState = !sportState
-                    },                verticalAlignment = Alignment.CenterVertically,
+                    }, verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Row(

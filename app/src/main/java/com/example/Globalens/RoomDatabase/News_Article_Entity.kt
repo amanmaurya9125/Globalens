@@ -18,14 +18,3 @@ data class News_Article_Entity(
     val source_Icon_Url : String?,
 )
 
-//@Entity(tableName = "Category_Data_Table")
-//data class Category_Article_Entity(
-//    @PrimaryKey
-//    val url : String = "Url Missing",
-//    val title : String?,
-//    val content : String?,
-//    val image: String?,
-//    val publishedAt: String?,
-//    val source_Name: String?,
-//    val source_Icon_Url : String?,
-//)

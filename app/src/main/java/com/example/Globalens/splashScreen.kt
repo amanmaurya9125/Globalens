@@ -16,15 +16,19 @@ import com.example.Globalens.ViewModel.NewsViewModel
 
 
 @Composable
-fun SplashScreen(navController: NavController,viewModel: NewsViewModel) {
+fun SplashScreen(navController: NavController, viewModel: NewsViewModel) {
     var isLoading by viewModel._loading_CategoryNews
     var isloading2 by viewModel._loading_BreakingNews
 
-    Box(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background), contentAlignment = Alignment.Center){
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
+        contentAlignment = Alignment.Center
+    ) {
         if (isLoading && isloading2) {
             CircularProgressIndicator()
-        }
-        else{
+        } else {
             LaunchedEffect(Unit) {
                 navController.navigate("Home") {
                     popUpTo("SplashScreen") {

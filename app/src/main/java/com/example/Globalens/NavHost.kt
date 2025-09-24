@@ -26,59 +26,71 @@ import com.example.Globalens.SignUp_Login.SignUpScreen
 @Composable
 fun NavigationGraph() {
     val context = LocalContext.current
-    val networkStatus = remember { CheckNetwork(context)}
+    val networkStatus = remember { CheckNetwork(context) }
     val viewModel: NewsViewModel
-    val Breaking_DAO : Breaking_Article_DAO
-    val Category_DAO : Category_Article_DAO
-val SavedDao : Saved_Article_dao
+    val Breaking_DAO: Breaking_Article_DAO
+    val Category_DAO: Category_Article_DAO
+    val SavedDao: Saved_Article_dao
 
-    Breaking_DAO = Breaking_Database_Creation.getDatabase_BreakingArticle(context).breaking_ArticleDao()
-    Category_DAO = Category_Databse_Creation.getCategory_DatabaseArticle(context).category_Database_dao()
-SavedDao = Saved_Database_Creation.getDatabase_SavedArticle(context).savedArticle_Dao()
-        viewModel = viewModel(factory = ViewModelFactory(NewsRepository(context,RetrofitInstance.api, breaking_Dao = Breaking_DAO, category_Dao = Category_DAO, saved_Dao = SavedDao), network = networkStatus))
-        val navController = rememberNavController()
-        LaunchedEffect(key1 = Unit) {
-            viewModel.getBreakingNews("world")
-            viewModel.loadCategory("All")
+    Breaking_DAO =
+        Breaking_Database_Creation.getDatabase_BreakingArticle(context).breaking_ArticleDao()
+    Category_DAO =
+        Category_Databse_Creation.getCategory_DatabaseArticle(context).category_Database_dao()
+    SavedDao = Saved_Database_Creation.getDatabase_SavedArticle(context).savedArticle_Dao()
+    viewModel = viewModel(
+        factory = ViewModelFactory(
+            NewsRepository(
+                context,
+                RetrofitInstance.api,
+                breaking_Dao = Breaking_DAO,
+                category_Dao = Category_DAO,
+                saved_Dao = SavedDao
+            ), network = networkStatus
+        )
+    )
+    val navController = rememberNavController()
+    LaunchedEffect(key1 = Unit) {
+        viewModel.getBreakingNews("world")
+        viewModel.loadCategory("All")
+    }
+
+    NavHost(navController = navController, startDestination = "SplashScreen") {
+        composable("SplashScreen") {
+            SplashScreen(navController, viewModel)
+        }
+        composable("Home") {
+            MainScreen(viewModel, navController)
+        }
+        composable("webView/{url}") { NavBackStackEntry ->
+            val url = NavBackStackEntry.arguments?.getString("url") ?: ""
+            FullArticle_WebView_Screen(url)
         }
 
-        NavHost(navController = navController, startDestination = "SplashScreen") {
-            composable("SplashScreen") {
-                SplashScreen(navController, viewModel)
+        composable("SeeMore_Screen/{type}") {
+            val type = it.arguments?.getString("type") ?: ""
+            if (type.equals("breakingNews")) {
+                val article = viewModel.breakingArticles.collectAsState()
+                SeeMore_Screen(article.value, viewModel)
+            } else {
+                val article by viewModel.categoryArticles.collectAsState()
+                SeeMore_Screen(article, viewModel)
             }
-            composable("Home") {
-                MainScreen(viewModel, navController)
-            }
-            composable("webView/{url}") { NavBackStackEntry ->
-                val url = NavBackStackEntry.arguments?.getString("url") ?: ""
-                FullArticle_WebView_Screen(url)
-            }
+        }
 
-            composable("SeeMore_Screen/{type}") {
-                val type = it.arguments?.getString("type") ?: ""
-                if (type.equals("breakingNews")) {
-                    val article = viewModel.breakingArticles.collectAsState()
-                    SeeMore_Screen(article.value,viewModel)
-                } else {
-                    val article by viewModel.categoryArticles.collectAsState()
-                    SeeMore_Screen(article,viewModel)
-                }
-            }
+        composable("searchResult") {
+            Disposable(viewModel)
+        }
 
-            composable("searchResult") {
-                Disposable(viewModel)
-            }
-
-            composable("signup"){
-                SignUpScreen(navController,viewModel)
-            }
-            composable("login"){
-                LoginScreen(navController,viewModel)
-            }
-            composable("savedArticle"){
-                viewModel.getSavedArticle()
-                val article = viewModel.savedArticle.collectAsState()
-                SeeMore_Screen(article.value,viewModel)
-            }
+        composable("signup") {
+            SignUpScreen(navController, viewModel)
+        }
+        composable("login") {
+            LoginScreen(navController, viewModel)
+        }
+        composable("savedArticle") {
+            viewModel.getSavedArticle()
+            val article = viewModel.savedArticle.collectAsState()
+            SeeMore_Screen(article.value, viewModel)
         }
     }
+}

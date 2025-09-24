@@ -252,13 +252,3 @@ fun Discover(viewModel: NewsViewModel, navController: NavController) {
         }
     }
 }
-
-//LazyColumn(state = listState) {
-//    items(50) { index ->
-//        Text(
-//            text = "Item $index",
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(16.dp)
-//        )
-//    }

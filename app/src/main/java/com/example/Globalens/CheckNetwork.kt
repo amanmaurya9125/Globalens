@@ -29,9 +29,6 @@ class CheckNetwork(context: Context) {
             .build()
         connectivityManager.registerNetworkCallback(request, networkCallback)
     }
-    fun unregisterCallback() {
-        connectivityManager.unregisterNetworkCallback(networkCallback)
-    }
 
     companion object {
         fun isNetworkAvailable(context: Context): Boolean {

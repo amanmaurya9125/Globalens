@@ -96,10 +96,13 @@ fun MainScreen(
     var user = remember { mutableStateOf(false) }
     val userPrefs = SharedPreferences().getUserAuth(context)
     var selectedIndex by remember { mutableStateOf(0) }
-    val themeFlow = Theme_Preferences.getTheme(context.applicationContext).collectAsState(initial = ThemeMode.Default)
+    val themeFlow = Theme_Preferences.getTheme(context.applicationContext)
+        .collectAsState(initial = ThemeMode.Default)
     if (userPrefs["uid"] != null) {
         user.value = true
     }
+
+    // 🔴 Show "No Internet" banner
     if (!isNetworkConnected) {
         Box(
             modifier = Modifier
@@ -120,18 +123,20 @@ fun MainScreen(
     }
 
     Scaffold(
-        bottomBar = { Bottom_Navigation(
-selectedIndex = selectedIndex,
-            onItemSelected = {
-                selectedIndex = it
-            }
-        ) }
-    ) {innerpadding ->
-        when(selectedIndex){
-            0 ->  HomeScreen(viewModel,navController)
-            1 -> Discover(viewModel,navController)
-            2 -> Saved(viewModel,navController)
-            3-> ProfileScreen(navController,viewModel, themeFlow = themeFlow.value)
+        bottomBar = {
+            Bottom_Navigation(
+                selectedIndex = selectedIndex,
+                onItemSelected = {
+                    selectedIndex = it
+                }
+            )
+        }
+    ) { innerpadding ->
+        when (selectedIndex) {
+            0 -> HomeScreen(viewModel, navController)
+            1 -> Discover(viewModel, navController)
+            2 -> Saved(viewModel, navController)
+            3 -> ProfileScreen(navController, viewModel, themeFlow = themeFlow.value)
         }
 
     }
@@ -144,8 +149,6 @@ fun HomeScreen(
     navController: NavController,
 ) {
     val context = LocalContext.current
-    val networkStatus = remember { CheckNetwork(context) }
-
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val categoryArticles by viewModel.categoryArticles.collectAsState()
     val breakingNewsArticle by viewModel.breakingArticles.collectAsState()
@@ -161,13 +164,12 @@ fun HomeScreen(
             drawerState.close()
         }
     }
-    // 🔴 Show "No Internet" banner
 
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet(modifier = Modifier.width(280.dp)) {
-                Drawer(navController, drawerState,viewModel)
+                Drawer(navController, drawerState, viewModel)
             }
         }
     ) {
@@ -283,7 +285,7 @@ fun HomeScreen_TopBar(
         ) {
             // Search Icon
             IconButton(
-                onClick = { Toast.makeText(context,"Not In Function", Toast.LENGTH_SHORT).show() },
+                onClick = { Toast.makeText(context, "Not In Function", Toast.LENGTH_SHORT).show() },
                 modifier = Modifier
                     .background(Color.White, shape = CircleShape)
                     .size(40.dp)
@@ -518,7 +520,7 @@ fun HomeScreen_RecommendedNews(
     title: String = "",
     publishDate: String = "",
     url: String = "",
-    content : String ="",
+    content: String = "",
     navController: NavController,
     viewModel: NewsViewModel,
 ) {
@@ -618,7 +620,7 @@ fun HomeScreen_RecommendedNews(
 }
 
 @Composable
-fun Bottom_Navigation(selectedIndex : Int,onItemSelected :(Int)-> Unit) {
+fun Bottom_Navigation(selectedIndex: Int, onItemSelected: (Int) -> Unit) {
     val items = listOf("Home", "Discover", "Saved", "Profile")
     val icons = listOf(
         R.drawable.home,
@@ -626,7 +628,6 @@ fun Bottom_Navigation(selectedIndex : Int,onItemSelected :(Int)-> Unit) {
         R.drawable.save,
         R.drawable.profile
     )
-//    var selectedIndex by remember { mutableStateOf(0) }
 
     NavigationBar(contentColor = Color.White) {
         items.forEachIndexed { index, item ->
@@ -645,8 +646,8 @@ fun Bottom_Navigation(selectedIndex : Int,onItemSelected :(Int)-> Unit) {
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = Color(0xFF1A73E8),
                     selectedTextColor = Color(0xFF1A73E8),
-                    unselectedIconColor =  MaterialTheme.colorScheme.onSurfaceVariant,
-                    unselectedTextColor =  MaterialTheme.colorScheme.onSurfaceVariant,
+                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     indicatorColor = Color.Transparent
                 )
             )
@@ -709,193 +710,3 @@ fun SearchBar(
         )
     )
 }
-
-
-//Text(
-//"• Entertainment",
-//style = MaterialTheme.typography.bodySmall,
-//color = Color.DarkGray,
-//modifier = Modifier.padding(start = 3.dp)
-//)
-
-
-//fun HomeScreen() {
-//    val articles = remember { mutableStateOf<List<Article>>(emptyList()) }
-//    LaunchedEffect(key1 = Unit) {
-//        GlobalScope.launch {
-//            val retrofit = Retrofit.Builder()
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .baseUrl("https://gnews.io/api/v4/")
-//                .build()
-//            val api_Service = retrofit.create(NewsAPIService::class.java)
-//
-//            val response = api_Service.getBreakingNews(
-//                apikey = "bb51d874d3bc18d6113ff5121142d7bd"
-//            )
-//            Log.d("RAW_JSON", response.errorBody()?.string() ?: "No error body")
-//            Log.d("RAW_JSON_SUCCESS", Gson().toJson(response.body()))
-//            val news = response.body()
-//            if (news != null) {
-//                if (response.isSuccessful) {
-//                    articles.value = (news.articles ?: emptyList())
-//
-//                    Log.d("Articles", news.toString())
-//                }
-//            } else {
-//                Log.d("Error Articles", "Response Body is null")
-//                Log.d("Error Articles", articles.value.toString())
-//            }
-//        }
-//    }
-//    Scaffold(bottomBar = {
-//        Bottom_Navigation()
-//    }) { paddingValues ->
-//        Column(
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .padding(paddingValues)
-//        ) {
-//            HomeScreen_TopBar()
-//
-//            HomeScreen_Heading(
-//                stringResource(R.string.breaking_news),
-//                stringResource(R.string.show_more)
-//            )
-////        HomeScreen_CardPreview()
-//            Card_LazyColumn(articles.value)
-//            HomeScreen_Category()
-//
-//            HomeScreen_Heading(
-//                stringResource(R.string.recommended),
-//                stringResource(R.string.show_more)
-//            )
-////        HomeScreen_RecommendedNews()
-//
-//            Recommended_News_LazyColumn()
-//        }
-//    }
-//}
-
-
-//@Composable
-//fun retrofit() {
-//    val articles = remember { mutableStateOf<List<Article>>(emptyList()) }
-//    LaunchedEffect(key1 = 1) {
-//        try {
-//            val retrofit = Retrofit.Builder()
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .baseUrl("https://newsapi.org/v2/")
-//                .build()
-//            val api_Service = retrofit.create(NewsAPIService::class.java)
-//
-//            val response = api_Service.getBreakingNews(
-//                apiKeey = "5514fc56c5dc4c4f8f702f3f1c2c2040"
-//            )
-//            if (response.isSuccessful) {
-//                articles.value = response.body()?.articles ?: emptyList()
-//
-//                Log.d("Articles",response.body().toString())
-//            }
-//        } catch (e : Exception){
-//            e.printStackTrace()
-//            Log.d("Error Articles",e.toString())
-//
-//        }
-//
-//    }
-//    Card_LazyColumn(articles.value)
-//
-//}
-
-//@OptIn(ExperimentalMaterial3Api::class)
-//@Composable
-//fun HomeScreen(
-//    viewModel: NewsViewModel,
-//    navController: NavController,
-//) {
-//    val context = LocalContext.current
-//    val networkStatus = remember { CheckNetwork(context) }
-//    val isNetworkConnected by networkStatus.isConnected.collectAsState()
-//
-//    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-//    val categoryArticles by viewModel.categoryArticles.collectAsState()
-//    val breakingNewsArticle by viewModel.breakingArticles.collectAsState()
-//    val state by viewModel.isRefreshing.collectAsState()
-//    val scope = rememberCoroutineScope()
-//    var user = remember { mutableStateOf(false) }
-//    val userPrefs = SharedPreferences().getUserAuth(context)
-//    Log.d("Saveee", userPrefs["uid"].toString())
-//    if (userPrefs["uid"] != null) {
-//        user.value = true
-//    }
-//    BackHandler(enabled = drawerState.isOpen) {
-//        scope.launch {
-//            drawerState.close()
-//        }
-//    }
-//    // 🔴 Show "No Internet" banner
-//    if (!isNetworkConnected) {
-//        Box(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .zIndex(1f)
-//                .background(Color.Red)
-//                .padding(8.dp)
-//        ) {
-//            Text(
-//                "No Internet Connection",
-//                color = Color.White,
-//                textAlign = TextAlign.Center,
-//                fontSize = 20.sp,
-//                fontWeight = FontWeight.Bold,
-//                modifier = Modifier.fillMaxWidth()
-//            )
-//        }
-//    }
-//
-//    ModalNavigationDrawer(
-//        drawerState = drawerState,
-//        drawerContent = {
-//            ModalDrawerSheet(modifier = Modifier.width(280.dp)) {
-//                Drawer(navController, drawerState, user.value)
-//            }
-//        }
-//    ) {
-//        Scaffold(
-//            topBar = { HomeScreen_TopBar(viewModel, navController, drawerState) },
-//            bottomBar = { Bottom_Navigation() }
-//        ) { paddingValues ->
-//            PullToRefreshBox(
-//                isRefreshing = state,
-//                onRefresh = { viewModel.refreshAll() }
-//            ) {
-//                Column(
-//                    modifier = Modifier
-//                        .fillMaxSize()
-//                        .padding(paddingValues)
-//                ) {
-//                    // 🔹 Breaking News Section
-//                    HomeScreen_Heading(
-//                        heading = stringResource(R.string.breaking_news),
-//                        show_more = stringResource(R.string.show_more),
-//                        type = "breakingNews",
-//                        navController = navController
-//                    )
-//                    Card_LazyColumn(breakingNewsArticle)
-//
-//                    // 🔹 Category Section
-//                    HomeScreen_Category(viewModel)
-//
-//                    // 🔹 Recommended Section
-//                    HomeScreen_Heading(
-//                        heading = stringResource(R.string.recommended),
-//                        show_more = stringResource(R.string.show_more),
-//                        navController = navController
-//                    )
-//                    Spacer(modifier = Modifier.height(7.dp))
-//                    Recommended_News_LazyColumn(categoryArticles, navController, viewModel)
-//                }
-//            }
-//        }
-//    }
-//}

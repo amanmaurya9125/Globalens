@@ -1,9 +1,6 @@
 package com.example.Globalens.Repo
 
 import android.content.Context
-import android.provider.Settings.Global.getString
-import android.util.Log
-import android.widget.Toast
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.exceptions.NoCredentialException
@@ -12,15 +9,12 @@ import com.example.Globalens.RoomDatabase.Breaking_Article_DAO
 import com.example.Globalens.RoomDatabase.News_Article_Entity
 import com.example.Globalens.RoomDatabase.Category_Article_DAO
 import com.example.Globalens.RoomDatabase.toEntity
-import com.google.android.gms.common.internal.StringResourceValueReader
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOf
-import com.example.Globalens.R
 import com.example.Globalens.RoomDatabase.SavedNews.Saved_Article_dao
-import com.example.Globalens.RoomDatabase.SavedNews.Saved_News_Entity
 import com.example.Globalens.SharedPreferences
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.firebase.auth.GoogleAuthProvider
@@ -31,7 +25,7 @@ class NewsRepository(
     private val api: NewsAPIService,
     private val breaking_Dao: Breaking_Article_DAO,
     private val category_Dao: Category_Article_DAO,
-    private val saved_Dao : Saved_Article_dao
+    private val saved_Dao: Saved_Article_dao,
 ) {
     lateinit var firebaseAuth: FirebaseAuth
     lateinit var GoogleIdOption: GetGoogleIdOption
@@ -39,16 +33,13 @@ class NewsRepository(
     private val cache = mutableMapOf<String, List<News_Article_Entity>>()
     lateinit var sharedPreferences: SharedPreferences
 
-        private val API_KEY = "bb51d874d3bc18d6113ff5121142d7bd"
-//    private val API_KEY = "b5908be83262f44cbf6d1a208efa942b"
-
-
+    val API_KEY = api().api1()
+    val API_KEY2 = api().api2()
     suspend fun get_breakingNews(
         category: String = "",
         query: String = "",
         isNetworkConncted: StateFlow<Boolean>,
     ): Flow<List<News_Article_Entity>> {
-        Log.d("Network", isNetworkConncted.value.toString())
         return if (isNetworkConncted.value) {
             val response = api.getNews(
                 apikey = API_KEY,
@@ -77,9 +68,7 @@ class NewsRepository(
         query: String = "",
         isNetworkConncted: StateFlow<Boolean>,
     ): Flow<List<News_Article_Entity>> {
-        Log.d("Network2", isNetworkConncted.value.toString())
         if (category.isNotEmpty() && cache.containsKey(category)) {
-            Log.d("Cache", "${cache[category]}")
             return flowOf(cache[category]!!)
         }
 
@@ -94,7 +83,6 @@ class NewsRepository(
                 val article = response.body()?.articles ?: emptyList()
                 val entities = article.map { it.toEntity() }
                 category_Dao.deleteAll()
-                Log.d("Cache2", "${category}")
                 category_Dao.insertArticle(entities)
                 cache[category] = entities
             } else {
@@ -179,15 +167,15 @@ class NewsRepository(
         }
     }
 
-    fun signOut(){
-      firebaseAuth = FirebaseAuth.getInstance()
+    fun signOut() {
+        firebaseAuth = FirebaseAuth.getInstance()
         firebaseAuth.signOut()
     }
 //    SAVED ARTICLE DATABASE CODE
 
-    suspend fun addSaved(article : News_Article_Entity) = saved_Dao.insertArticle(article)
+    suspend fun addSaved(article: News_Article_Entity) = saved_Dao.insertArticle(article)
     suspend fun removedSaved(article: News_Article_Entity) = saved_Dao.deleteArticle(article)
 
     suspend fun getSaved() = saved_Dao.getArticle()
-    suspend fun isFavorite(url : String) = saved_Dao.isFavorite(url)
+    suspend fun isFavorite(url: String) = saved_Dao.isFavorite(url)
 }

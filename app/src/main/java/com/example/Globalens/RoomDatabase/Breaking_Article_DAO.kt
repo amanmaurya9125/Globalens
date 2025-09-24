@@ -5,7 +5,6 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.Globalens.RoomDatabase.SavedNews.Saved_News_Entity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

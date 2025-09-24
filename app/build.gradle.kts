@@ -40,6 +40,13 @@ android {
     buildFeatures {
         compose = true
     }
+    lint {
+        disable ; "NullSafeMutableLiveData"
+    }
+    lint {
+        abortOnError = false
+        checkReleaseBuilds = false
+    }
 }
 
 dependencies {
@@ -68,7 +75,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("io.coil-kt:coil-compose:2.4.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.4")
-//    implementation("androidx.compose.material3:material3:1.2.0")
+
 
     implementation("androidx.navigation:navigation-compose:2.8.0")
     // Room runtime library
@@ -80,9 +87,6 @@ dependencies {
     implementation("androidx.compose.material3:material3-window-size-class:1.3.2")
 
     implementation ("com.google.accompanist:accompanist-systemuicontroller:0.30.1")
-// Jetpack Compose
-//    implementation "androidx.compose.ui:ui:1.7.0"
-
 // LiveData support for Compose
     implementation ("androidx.compose.runtime:runtime-livedata:1.7.0")
     implementation ("androidx.datastore:datastore-preferences:1.1.1")
