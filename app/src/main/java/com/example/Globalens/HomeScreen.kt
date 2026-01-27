@@ -710,3 +710,4 @@ fun SearchBar(
         )
     )
 }
+

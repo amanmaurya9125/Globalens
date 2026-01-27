@@ -90,6 +90,8 @@ dependencies {
 // LiveData support for Compose
     implementation ("androidx.compose.runtime:runtime-livedata:1.7.0")
     implementation ("androidx.datastore:datastore-preferences:1.1.1")
+    implementation("androidx.compose.material3:material3-window-size-class")
+
 
 }
 
