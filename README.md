@@ -59,10 +59,11 @@ This ensures clean, maintainable, and scalable code.
 
 ## 📸 Screenshots
 
-<src="https://github.com/user-attachments/assets/392374ca-9955-48b7-aa4d-59de5553ca3f" />
-<src="https://github.com/user-attachments/assets/01f06ef4-8adc-4f00-8dda-0509dc6d6dac" />
-<src="https://github.com/user-attachments/assets/7a89c819-01ee-49b9-a28e-eb898e67a4bd" />
-<src="https://github.com/user-attachments/assets/8a3d6989-ac74-40c1-9774-302d56da7060" />
+<img width="720" height="1612" alt="image" src="https://github.com/user-attachments/assets/a17c0822-0b5b-468c-af65-b89a4ba4adaf" />
+<img width="720" height="1612" alt="image" src="https://github.com/user-attachments/assets/5fa96b8e-5f00-4f07-90cf-efc90b882b2d" />
+<img width="720" height="1563" alt="image" src="https://github.com/user-attachments/assets/466cfb54-0e8c-4297-98ec-06393c9d8d33" />
+<img width="720" height="1563" alt="image" src="https://github.com/user-attachments/assets/0d33575c-889d-435f-96c6-9d72ef6e2df2" />
+
 
 ---
 
